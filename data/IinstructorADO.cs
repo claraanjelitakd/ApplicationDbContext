@@ -86,13 +86,15 @@ namespace SimpleRESTApi.Data
                 SqlDataReader dr = cmd.ExecuteReader(); //baca data pakai data reader trs dimaping make while
                 if (dr.HasRows)
                 {
-                    dr.Read();
+                   while(dr.Read())
+                    {
                     Instructor.InstructorID = Convert.ToInt32(dr["InstructorID"]);
                         Instructor.InstructorName = dr["InstructorName"].ToString();
                         Instructor.InstructorEmail = dr["InstructorEmail"].ToString();
                         Instructor.InstructorPhone = dr["InstructorPhone"].ToString();
                         Instructor.InstructorAddress = dr["InstructorAddress"].ToString();
                         Instructor.InstructorCity = dr["InstructorCity"].ToString();
+                    }
                     
                 }
                 else{throw new Exception("Instructor not found");}
