@@ -61,6 +61,6 @@ public class InstructorDal : IInstructor
             {
                 throw new Exception("Instructor not found");
             }
-            return Instructor;
+            return existingInstructor;
         }
     }

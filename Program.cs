@@ -1,3 +1,5 @@
+using System.Net;
+using System.Text;
 using SimpleRESTApi.Data;
 using SimpleRESTApi.Models;
 
@@ -7,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 //DI --> di injek lalu nanti baru bisa dipakai dibawahnya.
-builder.Services.AddSingleton<ICategory, categoryDal>();
-builder.Services.AddSingleton<IInstructor, InstructorDal>();
-
+builder.Services.AddScoped<ICategory, CategoryADO>(); // Ubah dari AddSingleton ke AddScoped //dari ado.net --> diubah biar bisa ngambil dari json krn klo singleton bs ada resiko deadlock krn request scr bersamaan klo scope -->itu transient untuk ngatur dari iconfiguration. 
+//builder.Services.AddSingleton<IInstructor, InstructorDal>();
+builder.Services.AddScoped<IInstructor, IinstructorADO>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,18 +42,18 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast");
 //app.MapGet("api/v1/helloservices/", (string? id) => $"Hello {id}!");
 //app.MapGet("api/v1/helloservices/{name}", (string name) => $"Hello {name}!");
-/*app.MapGet("api/v1/luas-segitiga", (double alas, double tinggi) =>
+app.MapGet("api/v1/luas-segitiga", (double alas, double tinggi) =>
 {
     var luas = alas * tinggi / 2;
     return $"Luas segitiga dengan alas {alas} dan tinggi {tinggi} adalah {luas}";
 });
-app.MapGet("api/v1/categories",() =>
-{
-    category category = new category();
-    category.categoryID = 1;
-    category.categoryName = "ASP.NET core";
-    return category;
-});*/
+// app.MapGet("api/v1/categories",() =>
+// {
+//     category category = new category();
+//     category.categoryID = 1;
+//     category.categoryName = "ASP.NET core";
+//     return category;
+// });
 app.MapGet("api/v1/categories",(ICategory categoryData) =>
 {
     var categories = categoryData.GetCategories();
